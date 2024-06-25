@@ -2,6 +2,7 @@
 Review related functionality
 """
 
+import datetime
 from src.models.base import Base
 from src.models.place import Place
 from src.models.user import User
@@ -17,9 +18,8 @@ class Review(Base):
     user_id = Column(String(50), nullable=False)
     comment = Column(String, nullable=False)
     rating = Column(Float, nullable=False)
-
-    created_at = Column(DateTime, default=db.func.current_timestamp())
-    updated_at = Column(DateTime, default=db.func.current_timestamp, onupdate=db.func.current_timestamp())
+    created_at = Column(DateTime, default=datetime.datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
 
     def __init__(
         self, place_id: str, user_id: str, comment: str, rating: float, **kw

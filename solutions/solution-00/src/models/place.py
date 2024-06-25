@@ -2,6 +2,7 @@
 Place related functionality
 """
 
+import datetime
 from src.models.base import Base
 from src.models.city import City
 from src.models.user import User
@@ -24,8 +25,8 @@ class Place(Base):
     number_of_rooms = Column(Integer, nullable=False)
     number_of_bathrooms = Column(Integer, nullable=False)
     max_guests = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=db.func.current_timestamp())
-    updated_at = Column(DateTime, onupdate=db.func.current_timestamp())
+    created_at = Column(DateTime, default=datetime.datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
     
 
     def __init__(self, data: dict | None = None, **kw) -> None:

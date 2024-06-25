@@ -2,6 +2,7 @@
 City related functionality
 """
 
+import datetime
 from src.models.base import Base
 from src.models.country import Country
 from sqlalchemy import Column, String, DateTime
@@ -14,8 +15,8 @@ class City(Base):
     id = Column(String(36), primary_key=True, default=uuid.uuid4)
     name = Column(String(120), nullable=False, unique=True)
     country_code = Column(String(3), nullable=False)
-    created_at = Column(DateTime, default=db.func.current_timestamp())
-    updated_at = Column(DateTime, onupdate=db.func.current_timestamp())
+    created_at = Column(DateTime, default=datetime.datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
 
     def __init__(self, name: str, country_code: str, **kw) -> None:
         """Dummy init"""

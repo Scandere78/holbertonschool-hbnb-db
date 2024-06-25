@@ -1,6 +1,7 @@
 """
 Country related functionality
 """
+import datetime
 from src.models.base import Base
 import uuid
 from sqlalchemy.orm import relationship
@@ -18,8 +19,8 @@ class Country:
     name = Column(String(120), nullable=False, unique=True)
     code = Column(String(3), nullable=False, unique=True)
     cities = relationship("City", back_populates="country")
-    created_at = Column(DateTime, default=db.func.current_timestamp())
-    updated_at = Column(DateTime, default=db.func.current_timestamp())
+    created_at = Column(DateTime, default=datetime.datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
 
     def __init__(self, name: str, code: str, **kw) -> None:
         """Dummy init"""

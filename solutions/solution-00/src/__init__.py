@@ -2,7 +2,6 @@
 
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLALchemy
 
 cors = CORS()
 
@@ -18,7 +17,6 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     app.config.from_object(config_class)
     
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///development.db'
-    db = SQLAlchemy(app)
     register_extensions(app)
     register_routes(app)
     register_handlers(app)
