@@ -1,7 +1,10 @@
 """
 Country related functionality
 """
-
+from src.models.base import Base
+import uuid
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, DateTime
 
 class Country:
     """
@@ -11,10 +14,12 @@ class Country:
 
     This class is used to get and list countries
     """
-
-    name: str
-    code: str
-    cities: list
+    id = Column(String(36), primary_key=True, default=uuid.uuid4)
+    name = Column(String(120), nullable=False, unique=True)
+    code = Column(String(3), nullable=False, unique=True)
+    cities = relationship("City", back_populates="country")
+    created_at = Column(DateTime, default=db.func.current_timestamp())
+    updated_at = Column(DateTime, default=db.func.current_timestamp())
 
     def __init__(self, name: str, code: str, **kw) -> None:
         """Dummy init"""

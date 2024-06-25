@@ -3,14 +3,21 @@ User related functionality
 """
 
 from src.models.base import Base
+import uuid
+from sqlalchemy import Column, String, Boolean, DateTime
 
 
 class User(Base):
     """User representation"""
 
-    email: str
-    first_name: str
-    last_name: str
+    __tablename__ = 'user'
+
+    id = Column(String(36), primary_key=True, default=uuid.uuid4)
+    email = Column(String(120), unique=True, nullable=False)
+    password = Column(String(128), nullable=False)  # Ensure secure storage
+    is_admin = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=db.func.current_timestamp())
+    updated_at = Column(DateTime, onupdate=db.func.current_timestamp())
 
     def __init__(self, email: str, first_name: str, last_name: str, **kw):
         """Dummy init"""

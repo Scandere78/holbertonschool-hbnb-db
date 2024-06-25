@@ -3,12 +3,19 @@ Amenity related functionality
 """
 
 from src.models.base import Base
+import uuid
+from sqlalchemy import Column, String, DateTime
 
 
 class Amenity(Base):
     """Amenity representation"""
 
-    name: str
+    __tablename__ = 'amenity'
+
+    id = Column(String(36), primary_key=True, default=uuid.uuid4)
+    name = Column(String(120), nullable=False, unique=True)
+    created_at = Column(DateTime, default=db.func.current_timestamp())
+    updated_at = Column(DateTime, onupdate=db.func.currrent_timestamp())
 
     def __init__(self, name: str, **kw) -> None:
         """Dummy init"""
