@@ -6,7 +6,9 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 
+from .app import app
 from .db import db
+from .bcrypt import bcrypt
 
 load_dotenv()
 cors = CORS()
@@ -19,7 +21,6 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     Create a Flask app with the given configuration class.
     The default configuration class is DevelopmentConfig.
     """
-    app = Flask(__name__)
     app.url_map.strict_slashes = False
 
     app.config.from_object(config_class)
@@ -30,6 +31,7 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     register_handlers(app)
 
     db.init_app(app)
+    bcrypt.init_app(app)
     jwt.init_app(app)
     with app.app_context():
         db.create_all()

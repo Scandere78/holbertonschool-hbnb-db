@@ -1,9 +1,10 @@
 """
 user related functionality
 """
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Boolean
 
 from .base_model import BaseModel
+from src.bcrypt import bcrypt
 
 
 class User(BaseModel):
@@ -13,10 +14,18 @@ class User(BaseModel):
     email = Column(String(120), unique=True, nullable=False)
     first_name = Column(String(120), nullable=False)
     last_name = Column(String(120), nullable=False)
+    password_hash = Column(String(128))
+    is_admin = Column(Boolean, default=False)
 
     def __repr__(self) -> str:
         """Dummy repr"""
         return f"<User {self.id} ({self.email})>"
+
+    def set_password(self, password):
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password_hash, password)
 
     def to_dict(self) -> dict:
         """Dictionary representation of the object"""
