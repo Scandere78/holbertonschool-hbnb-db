@@ -12,4 +12,44 @@ class Country(BaseModel):
 
     name = Column(String(120), nullable=False, unique=True)
     code = Column(String(3), nullable=False, unique=True)
+
     cities = relationship("City", back_populates="country")
+
+    def __repr__(self) -> str:
+        """Dummy repr"""
+        return f"<Country {self.code} ({self.name})>"
+
+    def to_dict(self) -> dict:
+        """Returns the dictionary representation of the country"""
+        return {
+            "name": self.name,
+            "code": self.code,
+        }
+    
+    @staticmethod
+    def get_all() -> list["Country"]:
+        """Get all countries"""
+        from src.persistence import repo
+
+        countries: list["Country"] = repo.get_all(Country)
+
+        return countries
+
+    @staticmethod
+    def get(code: str) -> "Country | None":
+        """Get a country by its code"""
+        for country in Country.get_all():
+            if country.code == code:
+                return country
+        return None
+
+    @staticmethod
+    def create(name: str, code: str) -> "Country":
+        """Create a new country"""
+        from src.persistence import repo
+
+        country = Country(name, code)
+
+        repo.save(country)
+
+        return country
