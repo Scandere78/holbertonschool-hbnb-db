@@ -13,9 +13,9 @@
 """
 from flask_sqlalchemy import SQLAlchemy
 
-from src.models.base import Base
+from src.models.db.base_model import BaseModel
 from src.persistence.repository import Repository
-from ..db import db
+from src.db import db
 
 class DBRepository(Repository):
     """Dummy DB repository"""
@@ -23,23 +23,27 @@ class DBRepository(Repository):
 
     def __init__(self) -> None:
         self.db = db
-        print(self.db)
 
-    def get_all(self, model_name: str) -> list:
-        return db.session.query(model_name)
+    def get_all(self, model) -> list:
+        return db.session.query(model).all()
 
-    def get(self, model_name: str, obj_id: str) -> Base | None:
-        """Not implemented"""
+    def get(self, model, obj_id: str) -> BaseModel | None:
+        """Get an object by its ID"""
+        for obj in self.get_all(model):
+            if obj.id == obj_id:
+                return obj
+        return None
 
     def reload(self) -> None:
+        pass
+
+    def save(self, obj) -> None:
+        self.db.session.add(obj)
+        self.db.session.commit()
+
+    def update(self, obj) -> BaseModel | None:
         """Not implemented"""
 
-    def save(self, obj: Base) -> None:
-        """Not implemented"""
-
-    def update(self, obj: Base) -> Base | None:
-        """Not implemented"""
-
-    def delete(self, obj: Base) -> bool:
+    def delete(self, obj) -> bool:
         """Not implemented"""
         return False
