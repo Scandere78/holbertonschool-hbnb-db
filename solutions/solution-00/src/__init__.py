@@ -1,13 +1,17 @@
 """ Initialize the Flask app. """
 
+import os
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
+from flask_jwt_extended import JWTManager
 
 from .db import db
 
 load_dotenv()
 cors = CORS()
+
+jwt = JWTManager()
 
 
 def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
@@ -19,12 +23,14 @@ def create_app(config_class="src.config.DevelopmentConfig") -> Flask:
     app.url_map.strict_slashes = False
 
     app.config.from_object(config_class)
+    app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY')
 
     register_extensions(app)
     register_routes(app)
     register_handlers(app)
 
     db.init_app(app)
+    jwt.init_app(app)
     with app.app_context():
         db.create_all()
 
