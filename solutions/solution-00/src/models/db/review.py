@@ -7,7 +7,7 @@ from .base_model import BaseModel
 
 
 class Review(BaseModel):
-    """User representation"""
+    """Review representation"""
     __tablename__ = "review"
 
     place_id = Column(String(60), nullable=False)
