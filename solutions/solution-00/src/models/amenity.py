@@ -2,21 +2,13 @@
 Amenity related functionality
 """
 
-import datetime
 from src.models.base import Base
-import uuid
-from sqlalchemy import Column, String, DateTime
 
 
 class Amenity(Base):
     """Amenity representation"""
 
-    __tablename__ = 'amenity'
-
-    id = Column(String(36), primary_key=True, default=uuid.uuid4)
-    name = Column(String(120), nullable=False, unique=True)
-    created_at = Column(DateTime, default=datetime.datetime.now)
-    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
+    name: str
 
     def __init__(self, name: str, **kw) -> None:
         """Dummy init"""

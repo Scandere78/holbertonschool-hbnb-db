@@ -2,32 +2,25 @@
 Place related functionality
 """
 
-import datetime
 from src.models.base import Base
 from src.models.city import City
 from src.models.user import User
-from sqlalchemy.orm import relationship
-import uuid
-from sqlalchemy import Column, String, Float, Integer, ForeignKey, DateTime
+
 
 class Place(Base):
     """Place representation"""
 
-    id = Column(String(36), primary_key=True, default=uuid.uuid4)
-    name = Column(String(120), nullable=False, unique=True)
-    description = Column(String, nullable=False)
-    address = Column(String, nullable=False)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
-    host_id = Column(String(36), ForeignKey('user.id'), nullable=False)
-    city_id = Column(String(36), ForeignKey('city.id'), nullable=False)
-    price_per_night = Column(Integer, nullable=False)
-    number_of_rooms = Column(Integer, nullable=False)
-    number_of_bathrooms = Column(Integer, nullable=False)
-    max_guests = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.now)
-    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
-    
+    name: str
+    description: str
+    address: str
+    latitude: float
+    longitude: float
+    host_id: str
+    city_id: str
+    price_per_night: int
+    number_of_rooms: int
+    number_of_bathrooms: int
+    max_guests: int
 
     def __init__(self, data: dict | None = None, **kw) -> None:
         """Dummy init"""

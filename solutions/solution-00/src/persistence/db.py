@@ -11,20 +11,22 @@
     - delete
     - reload (which can be empty)
 """
+from flask_sqlalchemy import SQLAlchemy
 
 from src.models.base import Base
 from src.persistence.repository import Repository
-
+from ..db import db
 
 class DBRepository(Repository):
     """Dummy DB repository"""
+    db: SQLAlchemy
 
     def __init__(self) -> None:
-        """Not implemented"""
+        self.db = db
+        print(self.db)
 
     def get_all(self, model_name: str) -> list:
-        """Not implemented"""
-        return []
+        return db.session.query(model_name)
 
     def get(self, model_name: str, obj_id: str) -> Base | None:
         """Not implemented"""

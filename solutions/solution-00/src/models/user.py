@@ -2,23 +2,15 @@
 User related functionality
 """
 
-import datetime
 from src.models.base import Base
-import uuid
-from sqlalchemy import Column, String, Boolean, DateTime
 
 
 class User(Base):
     """User representation"""
 
-    __tablename__ = 'user'
-
-    id = Column(String(36), primary_key=True, default=uuid.uuid4)
-    email = Column(String(120), unique=True, nullable=False)
-    password = Column(String(128), nullable=False)
-    is_admin = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.datetime.now)
-    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
+    email: str
+    first_name: str
+    last_name: str
 
     def __init__(self, email: str, first_name: str, last_name: str, **kw):
         """Dummy init"""

@@ -2,21 +2,15 @@
 City related functionality
 """
 
-import datetime
 from src.models.base import Base
 from src.models.country import Country
-from sqlalchemy import Column, String, DateTime
-import uuid
 
 
 class City(Base):
     """City representation"""
 
-    id = Column(String(36), primary_key=True, default=uuid.uuid4)
-    name = Column(String(120), nullable=False, unique=True)
-    country_code = Column(String(3), nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.now)
-    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
+    name: str
+    country_code: str
 
     def __init__(self, name: str, country_code: str, **kw) -> None:
         """Dummy init"""

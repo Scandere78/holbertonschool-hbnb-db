@@ -2,24 +2,18 @@
 Review related functionality
 """
 
-import datetime
 from src.models.base import Base
 from src.models.place import Place
 from src.models.user import User
-from sqlalchemy import Column, String, Float, DateTime
-import uuid
+
 
 class Review(Base):
     """Review representation"""
-    __tablename__ = 'review'
 
-    id = Column(String(36), primary_key=True, default=uuid.uuid4)
-    place_id = Column(String(60), nullable=False)
-    user_id = Column(String(50), nullable=False)
-    comment = Column(String, nullable=False)
-    rating = Column(Float, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.now)
-    updated_at = Column(DateTime, onupdate=datetime.datetime.now)
+    place_id: str
+    user_id: str
+    comment: str
+    rating: float
 
     def __init__(
         self, place_id: str, user_id: str, comment: str, rating: float, **kw
