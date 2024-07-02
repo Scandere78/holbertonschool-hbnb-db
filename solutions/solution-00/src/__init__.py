@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager
 
 from .app import app
 from .db import db
-from .bcrypt import bcrypt
+from .app_bcrypt import bcrypt
 
 load_dotenv()
 cors = CORS()

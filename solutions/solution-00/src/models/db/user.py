@@ -4,7 +4,7 @@ user related functionality
 from sqlalchemy import Column, String, Boolean
 
 from .base_model import BaseModel
-from src.bcrypt import bcrypt
+from src.app_bcrypt import bcrypt
 
 
 class User(BaseModel):
