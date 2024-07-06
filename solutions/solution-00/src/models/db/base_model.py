@@ -1,7 +1,7 @@
 import datetime
 from typing import Any
 import uuid
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, DateTime
 
 from src.db import db
 
@@ -17,9 +17,18 @@ class BaseModel(db.Model):
         default=str(uuid.uuid4()),
         primary_key=True
     )
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow,
-                        onupdate=datetime.datetime.utcnow)
+    created_at = Column(
+        DateTime,
+        default=datetime.datetime.utcnow
+    )
+    updated_at = Column(
+        DateTime,
+        default=datetime.datetime.utcnow,
+        onupdate=datetime.datetime.utcnow
+    )
+
+    def generate_id(self):
+        self.id = str(uuid.uuid4())
 
     @classmethod
     def get(cls, id) -> "Any | None":

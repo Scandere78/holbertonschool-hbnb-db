@@ -10,12 +10,13 @@ from src.controllers.cities import (
     get_cities,
     update_city,
 )
+from src.routes import admin_required
 
 cities_bp = Blueprint("cities", __name__, url_prefix="/cities")
 
 cities_bp.route("/", methods=["GET"])(get_cities)
-cities_bp.route("/", methods=["POST"])(create_city)
+cities_bp.route("/", methods=["POST"])(admin_required(create_city))
 
 cities_bp.route("/<city_id>", methods=["GET"])(get_city_by_id)
-cities_bp.route("/<city_id>", methods=["PUT"])(update_city)
-cities_bp.route("/<city_id>", methods=["DELETE"])(delete_city)
+cities_bp.route("/<city_id>", methods=["PUT"])(admin_required(update_city))
+cities_bp.route("/<city_id>", methods=["DELETE"])(admin_required(delete_city))

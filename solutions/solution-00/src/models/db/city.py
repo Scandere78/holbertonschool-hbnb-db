@@ -13,7 +13,7 @@ class City(BaseModel):
     __tablename__ = "city"
 
     name = Column(String(120), nullable=False, unique=True)
-    country_code = Column(String(3), ForeignKey(Country.id), nullable=False)
+    country_code = Column(String(3), ForeignKey(Country.country_code), nullable=False)
 
     country = relationship('Country', foreign_keys='City.country_code')
 
@@ -42,6 +42,7 @@ class City(BaseModel):
             raise ValueError("Country not found")
 
         city = City(**data)
+        city.generate_id()
 
         repo.save(city)
 

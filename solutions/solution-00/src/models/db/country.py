@@ -11,19 +11,19 @@ class Country(BaseModel):
     __tablename__ = "country"
 
     name = Column(String(120), nullable=False, unique=True)
-    code = Column(String(3), nullable=False, unique=True)
+    country_code = Column(String(3), nullable=False, unique=True)
 
     cities = relationship("City", back_populates="country")
 
     def __repr__(self) -> str:
         """Dummy repr"""
-        return f"<Country {self.code} ({self.name})>"
+        return f"<Country {self.country_code} ({self.name})>"
 
     def to_dict(self) -> dict:
         """Returns the dictionary representation of the country"""
         return {
             "name": self.name,
-            "code": self.code,
+            "country_code": self.country_code,
         }
     
     @staticmethod
@@ -39,7 +39,7 @@ class Country(BaseModel):
     def get(code: str) -> "Country | None":
         """Get a country by its code"""
         for country in Country.get_all():
-            if country.code == code:
+            if country.country_code == code:
                 return country
         return None
 
@@ -49,6 +49,7 @@ class Country(BaseModel):
         from src.persistence import repo
 
         country = Country(name, code)
+        country.generate_id()
 
         repo.save(country)
 

@@ -32,11 +32,12 @@ class Amenity(BaseModel):
         """Create a new amenity"""
         from src.persistence import repo
 
-        amenity = Amenity(**data)
+        new_amenity = Amenity(**data)
+        new_amenity.generate_id()
 
-        repo.save(amenity)
+        repo.save(new_amenity)
 
-        return amenity
+        return new_amenity
 
     @staticmethod
     def update(amenity_id: str, data: dict) -> "Amenity | None":
@@ -61,8 +62,8 @@ class PlaceAmenity(BaseModel):
     __tablename__ = "placeamenity"
 
     name = Column(String(150), unique=True, nullable=False)
-    place_id = Column(Integer, ForeignKey(Place.id), nullable=False)
-    amenity_id = Column(Integer, ForeignKey(Amenity.id), nullable=False)
+    place_id = Column(String(256), ForeignKey(Place.id), nullable=False)
+    amenity_id = Column(String(256), ForeignKey(Amenity.id), nullable=False)
 
     place = relationship('Place', foreign_keys='PlaceAmenity.place_id')
     amenity = relationship('Amenity', foreign_keys='PlaceAmenity.amenity_id')

@@ -13,24 +13,24 @@ class Country:
     """
 
     name: str
-    code: str
+    country_code: str
     cities: list
 
     def __init__(self, name: str, code: str, **kw) -> None:
         """Dummy init"""
         super().__init__(**kw)
         self.name = name
-        self.code = code
+        self.country_code = code
 
     def __repr__(self) -> str:
         """Dummy repr"""
-        return f"<Country {self.code} ({self.name})>"
+        return f"<Country {self.country_code} ({self.name})>"
 
     def to_dict(self) -> dict:
         """Returns the dictionary representation of the country"""
         return {
             "name": self.name,
-            "code": self.code,
+            "country_code": self.country_code,
         }
 
     @staticmethod
@@ -46,7 +46,7 @@ class Country:
     def get(code: str) -> "Country | None":
         """Get a country by its code"""
         for country in Country.get_all():
-            if country.code == code:
+            if country.country_code == code:
                 return country
         return None
 

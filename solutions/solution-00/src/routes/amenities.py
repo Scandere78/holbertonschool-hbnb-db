@@ -10,12 +10,13 @@ from src.controllers.amenities import (
     get_amenities,
     update_amenity,
 )
+from src.routes import admin_required
 
 amenities_bp = Blueprint("amenities", __name__, url_prefix="/amenities")
 
 amenities_bp.route("/", methods=["GET"])(get_amenities)
-amenities_bp.route("/", methods=["POST"])(create_amenity)
+amenities_bp.route("/", methods=["POST"])(admin_required(create_amenity))
 
 amenities_bp.route("/<amenity_id>", methods=["GET"])(get_amenity_by_id)
-amenities_bp.route("/<amenity_id>", methods=["PUT"])(update_amenity)
-amenities_bp.route("/<amenity_id>", methods=["DELETE"])(delete_amenity)
+amenities_bp.route("/<amenity_id>", methods=["PUT"])(admin_required(update_amenity))
+amenities_bp.route("/<amenity_id>", methods=["DELETE"])(admin_required(delete_amenity))

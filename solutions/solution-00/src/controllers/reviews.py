@@ -3,6 +3,8 @@ Reviews controller module
 """
 
 from flask import abort, request
+
+from src.controllers import get_jwt_data
 from src.models.review import Review
 from src.models import get_class
 
@@ -17,11 +19,17 @@ def get_reviews():
 
 def create_review(place_id: str):
     """Creates a new review"""
+    current_user, is_admin = get_jwt_data()
+
     _cls = get_class("Review")
     data = request.get_json()
 
     if "user_id" not in data:
         abort(400, "Missing field: user_id")
+
+    if not is_admin:
+        if data["user_id"] != current_user:
+            abort(403, f"Prohibited to create this review.")
 
     try:
         review = _cls.create(data | {"place_id": place_id})
@@ -66,8 +74,18 @@ def get_review_by_id(review_id: str):
 
 def update_review(review_id: str):
     """Updates a review by ID"""
+    current_user, is_admin = get_jwt_data()
+
     _cls = get_class("Review")
     data = request.get_json()
+    review: Review | None = _cls.get(review_id)
+
+    if not review:
+        abort(404, f"Review with ID {review_id} not found")
+
+    if not is_admin:
+        if review.user_id != current_user:
+            abort(403, f"Prohibited to update this review.")
 
     try:
         review: Review | None = _cls.update(review_id, data)
@@ -82,7 +100,18 @@ def update_review(review_id: str):
 
 def delete_review(review_id: str):
     """Deletes a review by ID"""
+    current_user, is_admin = get_jwt_data()
+
     _cls = get_class("Review")
+    review: Review | None = _cls.get(review_id)
+
+    if not review:
+        abort(404, f"Review with ID {review_id} not found")
+
+    if not is_admin:
+        if review.user_id != current_user:
+            abort(403, f"Prohibited to delete this review.")
+
     if not _cls.delete(review_id):
         abort(404, f"Review with ID {review_id} not found")
 

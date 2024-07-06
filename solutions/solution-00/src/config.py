@@ -11,6 +11,19 @@ from abc import ABC
 import os
 
 
+def get_url_database():
+    """
+        Get URL database dynamic with or not value by default.
+    """
+    url = os.getenv("DATABASE_URL", None)
+    if url:
+        return url
+
+    if os.environ.get('ENV') != 'development':
+        return "postgresql://user:password@localhost/hbnb_prod"
+    return "sqlite:///hbnb_dev.db"
+
+
 class Config(ABC):
     """
     Initial configuration settings
@@ -39,8 +52,9 @@ class DevelopmentConfig(Config):
     ```
     """
 
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL", "sqlite:///hbnb_dev.db")
+    SQLALCHEMY_DATABASE_URI = get_url_database()
+    JWT_SECRET_KEY = os.getenv(
+        "SECRET_KEY", "key")
     DEBUG = True
 
 
@@ -62,6 +76,8 @@ class TestingConfig(Config):
 
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    JWT_SECRET_KEY = os.getenv(
+        "SECRET_KEY", "key")
 
 
 class ProductionConfig(Config):
@@ -76,7 +92,6 @@ class ProductionConfig(Config):
     TESTING = False
     DEBUG = False
 
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        "postgresql://user:password@localhost/hbnb_prod"
-    )
+    SQLALCHEMY_DATABASE_URI = get_url_database()
+    JWT_SECRET_KEY = os.getenv(
+        "SECRET_KEY", "key")

@@ -6,7 +6,7 @@ it only stores it in memory
 from datetime import datetime
 from src.models.base import Base
 from src.persistence.repository import Repository
-from utils.populate import populate_db
+from utils.populate import populate_memory
 
 
 class MemoryRepository(Repository):
@@ -45,7 +45,7 @@ class MemoryRepository(Repository):
 
     def reload(self):
         """Populates the database with some dummy data"""
-        populate_db(self)
+        populate_memory(self)
 
     def save(self, obj: Base):
         """Save an object"""

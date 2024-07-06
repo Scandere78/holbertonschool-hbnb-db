@@ -1,10 +1,12 @@
 """
 user related functionality
 """
+from copy import copy
+import uuid
 from sqlalchemy import Column, String, Boolean
 
 from .base_model import BaseModel
-from src.app_bcrypt import bcrypt
+from src.app_bcrypt import generate_password, check_password
 
 
 class User(BaseModel):
@@ -22,10 +24,10 @@ class User(BaseModel):
         return f"<User {self.id} ({self.email})>"
 
     def set_password(self, password):
-        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password_hash = generate_password(password)
 
     def check_password(self, password):
-        return bcrypt.check_password_hash(self.password_hash, password)
+        return check_password(self.password_hash, password)
 
     def to_dict(self) -> dict:
         """Dictionary representation of the object"""
@@ -34,6 +36,8 @@ class User(BaseModel):
             "email": self.email,
             "first_name": self.first_name,
             "last_name": self.last_name,
+            "password_hash": self.password_hash,
+            "is_admin": self.is_admin,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
@@ -49,7 +53,13 @@ class User(BaseModel):
             if u.email == user["email"]:
                 raise ValueError("User already exists")
 
+        user['password_hash'] = None
+        password = copy(user['password'])
+        del user['password']
+
         new_user = User(**user)
+        new_user.set_password(password)
+        new_user.id = str(uuid.uuid4())
 
         repo.save(new_user)
 

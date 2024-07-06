@@ -1,1 +1,9 @@
-Generic single-database configuration.
+# Revision and process:
+```bash
+$ alembic revision --autogenerate -m "Text"
+```
+
+# Add migrations to the database:
+```bash
+$ alembic upgrade head
+```

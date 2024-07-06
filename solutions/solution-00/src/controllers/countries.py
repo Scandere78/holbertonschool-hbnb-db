@@ -39,7 +39,7 @@ def get_country_cities(code: str):
     cities: list[City] = _clsCity.get_all()
 
     country_cities = [
-        city.to_dict() for city in cities if city.country_code == country.code
+        city.to_dict() for city in cities if city.country_code == country.country_code
     ]
 
     return country_cities

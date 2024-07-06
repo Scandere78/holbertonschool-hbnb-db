@@ -1,10 +1,10 @@
 """
 Review related functionality
 """
-from sqlalchemy import Column, String, Float
+from sqlalchemy import Column, String, Float, ForeignKey
 
-from src.models.place import Place
-from src.models.user import User
+from src.models.db.place import Place
+from src.models.db.user import User
 from .base_model import BaseModel
 
 
@@ -12,8 +12,8 @@ class Review(BaseModel):
     """Review representation"""
     __tablename__ = "review"
 
-    place_id = Column(String(60), nullable=False)
-    user_id = Column(String(50), nullable=False)
+    place_id = Column(String(256), ForeignKey(Place.id), nullable=False)
+    user_id = Column(String(256), ForeignKey(User.id), nullable=False)
     comment = Column(String, nullable=False)
     rating = Column(Float, nullable=False)
 
@@ -49,6 +49,7 @@ class Review(BaseModel):
             raise ValueError(f"Place with ID {data['place_id']} not found")
 
         new_review = Review(**data)
+        new_review.generate_id()
 
         repo.save(new_review)
 

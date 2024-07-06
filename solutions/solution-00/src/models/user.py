@@ -3,6 +3,7 @@ User related functionality
 """
 
 from src.models.base import Base
+from src.app_bcrypt import generate_password, check_password
 
 
 class User(Base):
@@ -11,13 +12,17 @@ class User(Base):
     email: str
     first_name: str
     last_name: str
+    password_hash: str
+    is_admin: bool
 
-    def __init__(self, email: str, first_name: str, last_name: str, **kw):
+    def __init__(self, email: str, first_name: str, last_name: str, password_hash: str, is_admin: bool, **kw):
         """Dummy init"""
         super().__init__(**kw)
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
+        self.password_hash = password_hash
+        self.is_admin = is_admin
 
     def __repr__(self) -> str:
         """Dummy repr"""
@@ -30,9 +35,17 @@ class User(Base):
             "email": self.email,
             "first_name": self.first_name,
             "last_name": self.last_name,
+            "password_hash": self.password_hash,
+            "is_admin": self.is_admin,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
+
+    def set_password(self, password):
+        self.password_hash = generate_password(password)
+
+    def check_password(self, password):
+        return check_password(self.password_hash, password)
 
     @staticmethod
     def create(user: dict) -> "User":
@@ -45,7 +58,9 @@ class User(Base):
             if u.email == user["email"]:
                 raise ValueError("User already exists")
 
+        user['password_hash'] = None
         new_user = User(**user)
+        new_user.set_password(user['password'])
 
         repo.save(new_user)
 

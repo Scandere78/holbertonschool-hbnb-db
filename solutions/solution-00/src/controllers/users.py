@@ -3,6 +3,8 @@ Users controller module
 """
 
 from flask import abort, request
+
+from src.controllers import get_jwt_data
 from src.models.user import User
 from src.models import get_class
 
@@ -46,8 +48,14 @@ def get_user_by_id(user_id: str):
 
 def update_user(user_id: str):
     """Updates a user by ID"""
+    current_user, is_admin = get_jwt_data()
+
     _cls = get_class("User")
     data = request.get_json()
+
+    if not is_admin:
+        if user_id != current_user:
+            abort(403, f"Prohibited to update this user.")
 
     try:
         user = _cls.update(user_id, data)
@@ -62,6 +70,12 @@ def update_user(user_id: str):
 
 def delete_user(user_id: str):
     """Deletes a user by ID"""
+    current_user, is_admin = get_jwt_data()
+
+    if not is_admin:
+        if user_id != current_user:
+            abort(403, f"Prohibited to delete this user.")
+
     _cls = get_class("User")
     if not _cls.delete(user_id):
         abort(404, f"User with ID {user_id} not found")

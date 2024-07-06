@@ -16,6 +16,9 @@ def main():
             test_users.test_post_user,
             test_users.test_put_user,
             test_users.test_delete_user,
+            test_users.test_login_user,
+            test_users.test_login_user_protected_page,
+            test_users.test_login_user_restricted_page
         ]
     )
 

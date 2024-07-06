@@ -16,6 +16,7 @@ from flask_sqlalchemy import SQLAlchemy
 from src.models.db.base_model import BaseModel
 from src.persistence.repository import Repository
 from src.db import db
+from utils.populate import populate_db
 
 class DBRepository(Repository):
     """Dummy DB repository"""
@@ -23,8 +24,10 @@ class DBRepository(Repository):
 
     def __init__(self) -> None:
         self.db = db
+        self.reload()
 
     def get_all(self, model) -> list:
+        """Get all objects of a given model"""
         return db.session.query(model).all()
 
     def get(self, model, obj_id: str) -> BaseModel | None:
@@ -35,15 +38,23 @@ class DBRepository(Repository):
         return None
 
     def reload(self) -> None:
-        pass
+        """Populates the database with some dummy data"""
+        populate_db(self)
 
     def save(self, obj) -> None:
+        """Save an object to the repository"""
         self.db.session.add(obj)
         self.db.session.commit()
 
     def update(self, obj) -> BaseModel | None:
-        """Not implemented"""
+        """Update an object in the repository"""
+        self.db.session.commit()
 
     def delete(self, obj) -> bool:
-        """Not implemented"""
-        return False
+        """Delete an object from the repository"""
+        try:
+            self.db.session.delete(obj)
+            self.db.session.commit()
+            return True
+        except Exception:
+            return False

@@ -4,22 +4,22 @@ Place related functionality
 from sqlalchemy import Column, String, Float, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 
-from src.models.city import City
-from src.models.user import User
+from src.models.db.city import City
+from src.models.db.user import User
 from .base_model import BaseModel
 
 
 class Place(BaseModel):
     """Place representation"""
-    __tablename__ = "Place"
+    __tablename__ = "place"
 
     name = Column(String(120), nullable=False, unique=True)
     description = Column(String, nullable=False)
     address = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    host_id = Column(String(36), ForeignKey('user.id'), nullable=False)
-    city_id = Column(String(36), ForeignKey('city.id'), nullable=False)
+    host_id = Column(String(256), ForeignKey(User.id), nullable=False)
+    city_id = Column(String(256), ForeignKey(City.id), nullable=False)
     price_per_night = Column(Integer, nullable=False)
     number_of_rooms = Column(Integer, nullable=False)
     number_of_bathrooms = Column(Integer, nullable=False)
@@ -65,7 +65,8 @@ class Place(BaseModel):
         if not city:
             raise ValueError(f"City with ID {data['city_id']} not found")
 
-        new_place = Place(data=data)
+        new_place = Place(**data)
+        new_place.generate_id()
 
         repo.save(new_place)
 

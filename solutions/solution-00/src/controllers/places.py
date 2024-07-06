@@ -3,6 +3,7 @@ Places controller module
 """
 
 from flask import abort, request
+from flask_jwt_extended import get_jwt_identity
 from src.models.place import Place
 from src.models import get_class
 
@@ -43,8 +44,17 @@ def get_place_by_id(place_id: str):
 
 def update_place(place_id: str):
     """Updates a place by ID"""
+    current_user = get_jwt_identity()
+
     _cls = get_class("Place")
     data = request.get_json()
+    place: Place | None = _cls.get(place_id)
+
+    if not place:
+        abort(404, f"Place with ID {place_id} not found")
+
+    if place.host_id != current_user:
+        abort(403, f"Prohibited to update this place.")
 
     try:
         place: Place | None = _cls.update(place_id, data)
@@ -59,7 +69,17 @@ def update_place(place_id: str):
 
 def delete_place(place_id: str):
     """Deletes a place by ID"""
+    current_user = get_jwt_identity()
+
     _cls = get_class("Place")
+    place: Place | None = _cls.get(place_id)
+
+    if not place:
+        abort(404, f"Place with ID {place_id} not found")
+
+    if place.host_id != current_user:
+        abort(403, f"Prohibited to delete this place.")
+
     if not _cls.delete(place_id):
         abort(404, f"Place with ID {place_id} not found")
 

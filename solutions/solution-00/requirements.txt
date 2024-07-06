@@ -6,3 +6,5 @@ gunicorn
 Flask-SQLAlchemy
 python-dotenv
 flask_bcrypt
+alembic
+psycopg2
